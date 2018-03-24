@@ -45,7 +45,7 @@ public class mainScript : MonoBehaviour {
 			//Horizontal swipe 
 			if(distance.x>0){
 				//Right swipe
-				transform.Translate(distance.x*Time.deltaTime,0,0);
+				transform.Translate(distance.x,0,0);
 			}
 			if (distance.x < 0) {
 				//Left swipe
@@ -56,11 +56,11 @@ public class mainScript : MonoBehaviour {
 			//Vertical swipe 
 			if(distance.y>0){
 				//Up swipe
-				transform.Translate(0,distance.y*Time.deltaTime,0);
+				transform.Translate(distance.y * Time.deltaTime, Space.World);
 			}
 			if (distance.y < 0) {
 				//Down swipe
-				transform.Translate(0,-distance.y*Time.deltaTime,0);
+				transform.Translate(distance.y * Time.deltaTime, GameObject.FindGameObjectWithTag("world"));
 			}
 		}
 	}
