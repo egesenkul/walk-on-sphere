@@ -31,7 +31,7 @@ public class mainScript : MonoBehaviour {
 		} else {
 			controlText.text = "right";
 		}
-	/*	if (Input.touchCount > 0) {
+		if (Input.touchCount > 0) {
 			Touch touch = Input.GetTouch (0);
 
 			if (touch.phase == TouchPhase.Began) {
@@ -50,7 +50,7 @@ public class mainScript : MonoBehaviour {
 				}
 			}
 		}
-		*/
+
 	}
 
 	void FixedUpdate()
