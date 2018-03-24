@@ -4,40 +4,63 @@ using UnityEngine;
 
 public class mainScript : MonoBehaviour {
 
-	private Touch initialTouch = new Touch();
-	private float distance = 0;
-	private bool hasSwiped = false;
-	private float speed = 5f;
+	public float maxTime=0.5f;
+	public float minSwipeDist=50;
 
-	void FixedUpdate(){
-		foreach (Touch t in Input.touches) {
-			if (t.phase == TouchPhase.Began) {
-				initialTouch = t;
-			} else if (t.phase == TouchPhase.Moved && !hasSwiped) {
-				float deltaX = initialTouch.position.x - t.position.x;
-				float deltaY = initialTouch.position.x - t.position.y;
-				bool SwipedSideways = Mathf.Abs (deltaX) > Mathf.Abs (deltaY);
-				distance = Mathf.Sqrt ((deltaX * deltaX) + (deltaY * deltaY));
-				if (distance > 100f) {
-					if (SwipedSideways && deltaX > 0) {
-						//swipe left
-						this.transform.Translate(-speed*Time.deltaTime,0,0);
-					} else if (SwipedSideways && deltaX <= 0) {
-						//swipe rigth
-						this.transform.Translate(speed*Time.deltaTime,0,0);
-					} else if (SwipedSideways && deltaY > 0) {
-						this.transform.Translate(0,-speed*Time.deltaTime,0);
-						//swipe down
-					} else if (SwipedSideways && deltaY <= 0) {
-						this.transform.Translate(0,speed*Time.deltaTime,0);
-						//swipe up
-					}
+	float startTime;
+	float endTime;
 
-					hasSwiped = true;
+	Vector3 startPos;
+	Vector3 endPos;
+
+	float swipeDistance;
+	float swipeTime;
+
+	void Update(){
+	
+		if (Input.touchCount > 0) {
+			Touch touch = Input.GetTouch (0);
+
+			if (touch.phase == TouchPhase.Began) {
+				startTime = Time.time;
+				startPos = touch.position;
+			
+			} else if (touch.phase == TouchPhase.Ended) {
+				endTime = Time.time;
+				endPos = touch.position;
+
+				swipeDistance = (endPos - startPos).magnitude;
+				swipeTime = endTime - startTime;
+
+				if (swipeTime < maxTime && swipeDistance > minSwipeDist) {
+					funSwipe ();
 				}
-			} else if (t.phase == TouchPhase.Ended) {
-				initialTouch = new Touch ();
-				hasSwiped = false;
+			}
+		}
+	}
+	void funSwipe(){
+
+		Vector2 distance = endPos - startPos;
+		if (Mathf.Abs (distance.x) > Mathf.Abs (distance.y)) {
+			//Horizontal swipe 
+			if(distance.x>0){
+				//Right swipe
+				transform.Translate(distance.x*Time.deltaTime,0,0);
+			}
+			if (distance.x < 0) {
+				//Left swipe
+				transform.Translate(-distance.x*Time.deltaTime,0,0);
+			}
+		}
+		else if (Mathf.Abs (distance.x) < Mathf.Abs (distance.y)) {
+			//Vertical swipe 
+			if(distance.y>0){
+				//Up swipe
+				transform.Translate(0,distance.y*Time.deltaTime,0);
+			}
+			if (distance.y < 0) {
+				//Down swipe
+				transform.Translate(0,-distance.y*Time.deltaTime,0);
 			}
 		}
 	}
